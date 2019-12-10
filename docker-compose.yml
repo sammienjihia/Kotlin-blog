@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: mvn spring-boot:run
+    volumes:
+      - ./:/project
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    # Give the container a name
+    container_name: demo5_db
+    # pull the postgres docker image
+    image: postgres:9.5
+
+    # set a volume so that the database is not lost when the container is shutdown
+    volumes:
+      - demo5_db:/var/lib/postgresql/data
+
+    # Set the postgres database name, user and password
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=demo5
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+
+volumes:
+  demo5_db: {}
